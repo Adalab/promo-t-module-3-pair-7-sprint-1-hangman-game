@@ -1,8 +1,19 @@
 import logo from '../images/logo.svg';
 import '../scss/main.scss';
+import {useState} from 'react';
 
 
 function App() {
+
+  const [numberOfErrors, setNumberOfErrors] = useState(0);
+
+  const handleClick = (ev) => {
+    ev.preventDefault();
+    setNumberOfErrors(numberOfErrors + 1);
+  };
+
+  console.log(numberOfErrors);
+
   return (
     <div className="page">
       <header>
@@ -46,8 +57,9 @@ function App() {
               id="last-letter"
             />
           </form>
+        <button onClick={handleClick}>Incrementar</button>
         </section>
-        <section className="dummy error-5">
+        <section className={`dummy error-${numberOfErrors}`}>
           <span className="error-13 eye"></span>
           <span className="error-12 eye"></span>
           <span className="error-11 line"></span>
