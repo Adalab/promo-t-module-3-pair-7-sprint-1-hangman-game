@@ -4,27 +4,49 @@ import { useState } from 'react';
 function App() {
   const [numberOfErrors, setNumberOfErrors] = useState(0);
   const [lastLetter, setLastLetter] = useState('');
-
-  const handleLetter = (ev) => {
-    setLastLetter(ev.target.value);
-    const regex = /^[A-Za-zÑñÁáÉéÍíÓóÚúÜü]/;
-    const match = regex.exec(lastLetter);
-    if (match !== null);
+  const [word, setWord] = useState('katakroker');
+  const [userLetters, setUserLetters] = useState([]);
+  const wordLetters = word.split('');
+  
+  
+  const renderSolutionLetters = () => {
+    return wordLetters.map((oneLetter, index)=> {
+      if (userLetters.includes(oneLetter)) {
+        return <li className="letter" key={index}>{oneLetter}</li>
+      } else {
+        return <li className="letter" key={index}></li>
+      }
+    })
   };
 
-  /*var text = "Éste es un texto de prueba";
-var regex = /^[A-Za-zÑñÁáÉéÍíÓóÚúÜü ]{1,50}$/;
+  const renderErrorLetters = () => {
+    return userLetters.map((oneLetter, index) => {
+      if(!wordLetters.includes(oneLetter)) {
+        return <li className="letter" key={index}>{oneLetter}</li>
+      }
+      if(userLetters.includes(oneLetter)) {
+        return <li className="letter" key={index}></li>
+      }
+    })
+  };
 
-var match = regex.exec(text);
-alert(match !== null); // imprime "true" si la cadena es aceptada*/
+  const handleLetter = (ev) => {
+    const regex = /^[A-Za-zÑñÁáÉéÍíÓóÚúÜü]/;
+    const match = regex.test(ev.target.value);
+    if (match || ev.target.value === '') {
+      setLastLetter(ev.target.value);
+      if (ev.target.value !== '' && !userLetters.includes(ev.target.value)) {
+      setUserLetters([...userLetters, ev.target.value])
+      };
+    };
+  };
 
   const handleClick = (ev) => {
     ev.preventDefault();
     setNumberOfErrors(numberOfErrors + 1);
   };
 
-  console.log(numberOfErrors);
-  console.log(lastLetter);
+  
   return (
     <div className='page'>
       <header>
@@ -35,26 +57,13 @@ alert(match !== null); // imprime "true" si la cadena es aceptada*/
           <div className='solution'>
             <h2 className='title'>Solución:</h2>
             <ul className='letters'>
-              <li className='letter'>k</li>
-              <li className='letter'>a</li>
-              <li className='letter'></li>
-              <li className='letter'>a</li>
-              <li className='letter'>k</li>
-              <li className='letter'>r</li>
-              <li className='letter'></li>
-              <li className='letter'>k</li>
-              <li className='letter'>e</li>
-              <li className='letter'>r</li>
+              {renderSolutionLetters()}
             </ul>
           </div>
           <div className='error'>
             <h2 className='title'>Letras falladas:</h2>
             <ul className='letters'>
-              <li className='letter'>f</li>
-              <li className='letter'>q</li>
-              <li className='letter'>h</li>
-              <li className='letter'>p</li>
-              <li className='letter'>x</li>
+              {renderErrorLetters()}
             </ul>
           </div>
           <form className='form'>
